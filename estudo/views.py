@@ -1,9 +1,9 @@
 from estudo import app, db
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from estudo.models import Contato
 
 @app.route('/')  # route() decorator to tell Flask what URL should trigger our function
-def hello_world():
+def homepage():
     user = 'José'
     age = 22
 
@@ -15,12 +15,13 @@ def hello_world():
 
     return render_template('index.html', context=context)  # render a template
 
-@app.route('/teste/')
+@app.route('/sobre/')
 def about():
     return render_template('about.html')
 
-@app.route('/contato/', methods=['GET', 'POST'])
-def contato():
+#######Formato Não Recomendado#########
+@app.route('/contato_old/', methods=['GET', 'POST'])
+def contato_old():
     context = {}
 
     if request.method == 'GET':
@@ -39,4 +40,17 @@ def contato():
         db.session.commit()
 
 
-    return render_template('contato.html', context=context)
+    return render_template('contato_old.html', context=context)
+#######################################
+
+@app.route('/contato/', methods=['GET', 'POST'])
+def contato():
+    from estudo.forms import ContatoForm
+
+    form = ContatoForm()
+
+    if form.validate_on_submit():
+        form.save()
+        return redirect(url_for('homepage'))
+
+    return render_template('contato.html', form=form)
