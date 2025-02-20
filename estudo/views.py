@@ -1,6 +1,7 @@
 from estudo import app, db
 from flask import render_template, request, redirect, url_for
 from estudo.models import Contato
+from estudo.forms import ContatoForm
 
 @app.route('/')  # route() decorator to tell Flask what URL should trigger our function
 def homepage():
@@ -45,7 +46,7 @@ def contato_old():
 
 @app.route('/contato/', methods=['GET', 'POST'])
 def contato():
-    from estudo.forms import ContatoForm
+    
 
     form = ContatoForm()
 
@@ -54,3 +55,20 @@ def contato():
         return redirect(url_for('homepage'))
 
     return render_template('contato.html', form=form)
+
+@app.route('/contatos/lista/')
+def lista_contatos():
+
+    if request.method == 'GET':
+        pesquisa = request.args.get('pesquisa', '')
+
+    dados = Contato.query.order_by('name')
+
+    if pesquisa != '':
+        dados = dados.filter_by(name=pesquisa)
+    
+    context = {
+        'dados': dados.all()
+    }
+
+    return render_template('lista_contatos.html', context=context)
