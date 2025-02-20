@@ -72,3 +72,12 @@ def lista_contatos():
     }
 
     return render_template('lista_contatos.html', context=context)
+
+
+@app.route('/contatos/<int:id>/')
+def detalhe_contato(id):
+    obj = Contato.query.get(id)
+
+
+
+    return render_template('detalhe_contato.html', obj=obj)

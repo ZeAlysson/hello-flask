@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row mt-4">
+    <h3>Contato</h3>
+    <div class="col-md-6 mt-4">
+        Nome
+        <input type="text" class="form-control" value="{{obj.name}}" readonly>
+    </div>
+    <div class="col-md-6 mt-4">
+        Email
+        <input type="text" class="form-control" value="{{obj.email}}" readonly>
+    </div>
+    <div class="col-12 mt-4">
+        Assunto
+        <input type="text" class="form-control" value="{{obj.assunto}}" readonly>
+    </div>
+    <div class="col-12 mt-4">
+        Mensagem
+        <textarea class="form-control" rows="5" readonly>{{obj.message}}</textarea>
+    </div>
+  
+</div>
+
+
+
+{% endblock %}

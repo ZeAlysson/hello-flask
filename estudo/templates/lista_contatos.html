@@ -14,7 +14,6 @@
 
         <div class="row">
             <h2 class="mt-4">Lista de Contatos</h2>
-            {{context['dados']}}
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -22,6 +21,7 @@
                         <th>Email</th>
                         <th>Assunto</th>
                         <th>Respondido</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +37,7 @@
                                 Não
                             {% endif %}
                         </td>
+                        <td><a href="{{ url_for('detalhe_contato', id=linha.id) }}"><img src="{{url_for('static', filename='img/link.png')}}" style="width: 20px;"></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
