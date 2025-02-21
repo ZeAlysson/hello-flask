@@ -1,9 +1,40 @@
 {% extends 'base.html' %}
 {% block content %} 
     <header class="bg-success text-white text-center py-3">
-        <h1>Bem-vindo à Minha Página, {{context.user}}</h1>
+        <h1>Bem-vindo à Minha Página</h1>
     </header>
     <main class="container mt-4">
+        {% if current_user.is_authenticated %}
+        <div class="alert alert-success text-center" role="alert">
+            Você está logado como <strong>{{current_user.nome}} {{current_user.sobrenome}}</strong>
+        </div>
+        <div class="text-center">
+            <a href="{{url_for('logout')}}" class="btn btn-danger">Sair</a>
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="mt-4 text-center">Faça seu Login</h2>
+                <form action="" method="post" class="mt-4 mb-4 p-4 rounded border shadow">
+                    {{form.csrf_token}}
+                    <div class="mb-3">
+                        {{form.email.label(class="form-label")}}
+                        {{form.email(class="form-control")}}
+                    </div>
+                    <div class="mb-3">
+                        {{form.senha.label(class="form-label")}}
+                        {{form.senha(class="form-control")}}
+                    </div>
+                    <div class="text-center">
+                        {{form.btnSubmit(class="btn btn-primary mt-3")}}
+                    </div>
+                </form>
+                <div class="text-center">
+                    <a href="{{url_for('cadastro')}}" class="btn btn-link">Não tem login? Cadastre aqui</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </main>
     <footer class="bg-success text-white text-center py-3 mt-4">
         <p>&copy; 2025 Minha Página</p>

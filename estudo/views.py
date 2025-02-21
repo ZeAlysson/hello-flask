@@ -1,12 +1,19 @@
 from estudo import app, db
 from flask import render_template, request, redirect, url_for
 from estudo.models import Contato
-from estudo.forms import ContatoForm
+from estudo.forms import ContatoForm, UserForm, LoginForm
+from flask_login import login_user, logout_user, current_user
 
-@app.route('/')  # route() decorator to tell Flask what URL should trigger our function
+@app.route('/', methods=['GET', 'POST'])  # route() decorator to tell Flask what URL should trigger our function
 def homepage():
     user = 'José'
     age = 22
+
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = form.login()
+        login_user(user, remember=True)
 
     context = {
         'user': user,
@@ -14,7 +21,7 @@ def homepage():
     }
 
 
-    return render_template('index.html', context=context)  # render a template
+    return render_template('index.html', context=context, form=form)  # render a template
 
 @app.route('/sobre/')
 def about():
@@ -81,3 +88,20 @@ def detalhe_contato(id):
 
 
     return render_template('detalhe_contato.html', obj=obj)
+
+@app.route('/cadastro/', methods=['GET', 'POST'])
+def cadastro():
+
+    form = UserForm()
+
+    if form.validate_on_submit():
+        user = form.save()
+        login_user(user, remember=True)
+        return redirect(url_for('homepage'))
+    
+    return render_template('cadastro.html', form=form)
+
+@app.route('/sair/')
+def logout():
+    logout_user()
+    return redirect(url_for('homepage'))
