@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}  
+    <div class="container">
+        <div class="row">
+            <h2 class="mt-4">Lista de Posts</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Mensagem</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for linha in context['posts'] %}
+                    <tr>
+                        <td>{{linha.mensagem}}</td>
+                        <td>{{linha.user.nome}}  {{linha.user.sobrenome}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

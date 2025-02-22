@@ -1,7 +1,7 @@
 from estudo import app, db
-from flask import render_template, request, redirect, url_for
-from estudo.models import Contato
-from estudo.forms import ContatoForm, UserForm, LoginForm
+from flask import render_template, request, redirect, url_for, flash
+from estudo.models import Contato, Post
+from estudo.forms import ContatoForm, UserForm, LoginForm, PostForm
 from flask_login import login_user, logout_user, current_user
 
 @app.route('/', methods=['GET', 'POST'])  # route() decorator to tell Flask what URL should trigger our function
@@ -105,3 +105,27 @@ def cadastro():
 def logout():
     logout_user()
     return redirect(url_for('homepage'))
+
+@app.route('/post/novo/', methods=['GET', 'POST'])
+def novo_post():
+    if not current_user.is_authenticated:
+        flash('Você precisa estar logado para criar um novo post.', 'warning')
+        return redirect(url_for('homepage'))
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        form.save(current_user.id)
+        return redirect(url_for('homepage'))
+
+    return render_template('novo_post.html', form=form)
+
+@app.route('/post/lista/', methods=['GET'])
+def lista_posts():
+    posts = Post.query.all()
+
+    context = {
+        'posts': posts
+    }
+
+    return render_template('lista_posts.html', context=context)

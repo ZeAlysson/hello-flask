@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):  # create a class called User that inherits fro
     sobrenome = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(100), nullable=True, unique=True)  # create a column called email
     senha = db.Column(db.String(100), nullable=True)  # create a column called password
-
+    posts = db.relationship('Post', backref='user', lazy=True)  # create a relationship between the User and Post classes
 
 class Contato(db.Model):  # create a class called Contato that inherits from db.Model
     id = db.Column(db.Integer, primary_key=True)  # create a column called id
@@ -23,3 +23,10 @@ class Contato(db.Model):  # create a class called Contato that inherits from db.
     assunto = db.Column(db.String(100), nullable=True)  # create a column called assunto
     message = db.Column(db.Text, nullable=True)  # create a column called message
     ansewered = db.Column(db.Integer, default=0)  # create a column called ansewered
+
+class Post(db.Model):  # create a class called Post that inherits from db.Model
+    id = db.Column(db.Integer, primary_key=True)  # create a column called id
+    date_created = db.Column(db.DateTime, default=datetime.now)  # create a column called date_created
+    mensagem = db.Column(db.Text, nullable=True)  # create a column called mensagem
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # create a column called user_id
+

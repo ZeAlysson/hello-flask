@@ -13,6 +13,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('lista_contatos')}}">LISTA DE CONTATOS</a>
                 </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('novo_post')}}">NOVO POST</a>
+                </li>
+                {% else %}
+                {%endif%}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('lista_posts')}}">POST LISTA</a>
+                </li>
             </ul>
         </div>
     </div>

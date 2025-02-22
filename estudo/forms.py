@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
-from estudo.models import Contato, User
+from estudo.models import Contato, User, Post
 from estudo import db, bCrypt
 
 class UserForm(FlaskForm):
@@ -47,6 +47,7 @@ class LoginForm(FlaskForm):
             raise Exception('Usuário não cadastrado')
         
 class ContatoForm(FlaskForm):
+
     name = StringField('Nome', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     assunto = StringField('Assunto', validators=[DataRequired()])
@@ -62,4 +63,17 @@ class ContatoForm(FlaskForm):
         )
 
         db.session.add(contato)
+        db.session.commit()
+
+class PostForm(FlaskForm):
+    mensagem = TextAreaField('Conteúdo', validators=[DataRequired()])
+    btnSubmit = SubmitField('Enviar')
+
+    def save(self, user_id):
+        post = Post(
+            mensagem=self.mensagem.data, 
+            user_id=user_id
+        )
+
+        db.session.add(post)
         db.session.commit()
