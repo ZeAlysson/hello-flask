@@ -15,6 +15,7 @@
                     <tr>
                         <td>{{linha.mensagem}}</td>
                         <td>{{linha.user.nome}}  {{linha.user.sobrenome}}</td>
+                        <td><a href="{{url_for('PostDetail', id=linha.id)}}">Detalhes</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

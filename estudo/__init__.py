@@ -18,7 +18,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # set the secret key
 db = SQLAlchemy(app)  # create an instance of the SQLAlchemy class
 migrate = Migrate(app, db)  # create an instance of the Migrate class
 login_manager = LoginManager(app)  # create an instance of the LoginManager class
-login_manager.login_view = 'login'  # set the login view
+login_manager.login_view = 'homepage'  # set the login view
 bCrypt = Bcrypt(app)  # create an instance of the Bcrypt class
 
 from estudo.views import homepage  # import the views module

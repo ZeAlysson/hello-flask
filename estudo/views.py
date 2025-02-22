@@ -1,8 +1,8 @@
 from estudo import app, db
 from flask import render_template, request, redirect, url_for, flash
 from estudo.models import Contato, Post
-from estudo.forms import ContatoForm, UserForm, LoginForm, PostForm
-from flask_login import login_user, logout_user, current_user
+from estudo.forms import ContatoForm, UserForm, LoginForm, PostForm, PostComentarioForm
+from flask_login import login_user, logout_user, current_user, login_required
 
 @app.route('/', methods=['GET', 'POST'])  # route() decorator to tell Flask what URL should trigger our function
 def homepage():
@@ -22,10 +22,6 @@ def homepage():
 
 
     return render_template('index.html', context=context, form=form)  # render a template
-
-@app.route('/sobre/')
-def about():
-    return render_template('about.html')
 
 #######Formato Não Recomendado#########
 @app.route('/contato_old/', methods=['GET', 'POST'])
@@ -52,6 +48,7 @@ def contato_old():
 #######################################
 
 @app.route('/contato/', methods=['GET', 'POST'])
+@login_required
 def contato():
     
 
@@ -64,6 +61,7 @@ def contato():
     return render_template('contato.html', form=form)
 
 @app.route('/contatos/lista/')
+@login_required
 def lista_contatos():
 
     if request.method == 'GET':
@@ -82,6 +80,7 @@ def lista_contatos():
 
 
 @app.route('/contatos/<int:id>/')
+@login_required
 def detalhe_contato(id):
     obj = Contato.query.get(id)
 
@@ -107,9 +106,13 @@ def logout():
     return redirect(url_for('homepage'))
 
 @app.route('/post/novo/', methods=['GET', 'POST'])
+@login_required
 def novo_post():
     if not current_user.is_authenticated:
         flash('Você precisa estar logado para criar um novo post.', 'warning')
+        return redirect(url_for('homepage'))
+    
+    if current_user.id == 1:
         return redirect(url_for('homepage'))
 
     form = PostForm()
@@ -121,6 +124,7 @@ def novo_post():
     return render_template('novo_post.html', form=form)
 
 @app.route('/post/lista/', methods=['GET'])
+@login_required
 def lista_posts():
     posts = Post.query.all()
 
@@ -129,3 +133,20 @@ def lista_posts():
     }
 
     return render_template('lista_posts.html', context=context)
+
+
+@app.route('/post/<int:id>', methods=['GET', 'POST'])
+@login_required
+def PostDetail(id):
+
+    if not current_user.is_authenticated:
+        flash('Você precisa estar logado para criar um novo post.', 'warning')
+        return redirect(url_for('homepage'))
+    
+    post = Post.query.get(id)
+    form = PostComentarioForm()
+    if form.validate_on_submit():
+        form.save(current_user.id, id)
+        return redirect(url_for('PostDetail', id=id))
+    
+    return render_template('post_detail.html', post=post, form=form)
