@@ -112,8 +112,8 @@ def novo_post():
         flash('Você precisa estar logado para criar um novo post.', 'warning')
         return redirect(url_for('homepage'))
     
-    if current_user.id == 1:
-        return redirect(url_for('homepage'))
+    #if current_user.id == 1:
+        #return redirect(url_for('homepage'))
 
     form = PostForm()
 

@@ -29,6 +29,7 @@ class Post(db.Model):  # create a class called Post that inherits from db.Model
     id = db.Column(db.Integer, primary_key=True)  # create a column called id
     date_created = db.Column(db.DateTime, default=datetime.now)  # create a column called date_created
     mensagem = db.Column(db.Text, nullable=True)  # create a column called mensagem
+    imagem = db.Column(db.String, nullable=True, default='default.png')  # create a column called imagem
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # create a column called user_id
     comentarios = db.relationship('PostComentarios', backref='post', lazy=True)  # create a relationship between the User and Comentario classes
 

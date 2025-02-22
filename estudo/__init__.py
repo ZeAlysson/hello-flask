@@ -14,6 +14,8 @@ app = Flask(__name__)  # create an instance of the Flask class
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')  # set the database URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # set the track modifications to False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # set the secret key
+app.config['UPLOAD_FILES'] = r'static/data'  # set the upload files path
+
 
 db = SQLAlchemy(app)  # create an instance of the SQLAlchemy class
 migrate = Migrate(app, db)  # create an instance of the Migrate class

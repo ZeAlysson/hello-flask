@@ -1,9 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, PasswordField
+from wtforms import StringField, SubmitField, TextAreaField, PasswordField, FileField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+import os
+from werkzeug.utils import secure_filename
 
 from estudo.models import Contato, User, Post, PostComentarios
-from estudo import db, bCrypt
+from estudo import db, bCrypt, app
 
 class UserForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
@@ -67,14 +69,26 @@ class ContatoForm(FlaskForm):
 
 class PostForm(FlaskForm):
     mensagem = TextAreaField('Conteúdo', validators=[DataRequired()])
+    imagem = FileField('Imagem', validators=[DataRequired()])
     btnSubmit = SubmitField('Enviar')
 
     def save(self, user_id):
-        post = Post(
-            mensagem=self.mensagem.data, 
-            user_id=user_id
+        imagem = self.imagem.data
+        nome_seguro = secure_filename(imagem.filename)
+        post = Post (
+            mensagem=self.mensagem.data,
+            user_id=user_id,
+            imagem=nome_seguro
         )
 
+        caminho = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),# Pegar a pasta que está nosso projeto
+            app.config['UPLOAD_FILES'],# Definir a pasta que configuramos para UPLOAD
+            'post',# a pasta que está os POST
+            nome_seguro
+        )
+
+        imagem.save(caminho)
         db.session.add(post)
         db.session.commit()
 
